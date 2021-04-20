@@ -24,5 +24,17 @@ namespace Project1.Helper
             var jsonData = JsonSerializer.Serialize(data);
             await cache.SetStringAsync(recordId, jsonData, options);
         }
+
+
+        public static async Task<T> ReadRedis<T>(this IDistributedCache cache,string recordId)
+        {
+            var json =   await cache.GetStringAsync(recordId);
+            if(json is null)
+            {
+                return default(T);
+            }
+            return JsonSerializer.Deserialize<T>(json);
+
+        }
     }
 }
